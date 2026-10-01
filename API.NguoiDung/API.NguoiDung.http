@@ -1,0 +1,6 @@
+@API.NguoiDung_HostAddress = http://localhost:5211
+
+GET {{API.NguoiDung_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
