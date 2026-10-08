@@ -1,11 +1,23 @@
 using Microsoft.EntityFrameworkCore;
+using QlyDaoTao.BLL.Interfaces;
+using QlyDaoTao.BLL.Services;
+using QlyDaoTao.DAL.Data;
+using QlyDaoTao.DAL.Repositories;
+using QlyDaoTao.DAL.Repositories.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
+builder.Services.AddDbContext<QlyDaoTaoContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+builder.Services.AddScoped<ISinhVienRepository, SinhVienRepository>();
+builder.Services.AddScoped<ISinhVienService, SinhVienService>();
+builder.Services.AddScoped<IGiangVienRepository, GiangVienRepository>();
+builder.Services.AddScoped<IGiangVienService, GiangVienService>();
 builder.Services.AddControllers();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
