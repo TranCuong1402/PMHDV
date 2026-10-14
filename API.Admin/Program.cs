@@ -16,6 +16,10 @@ builder.Services.AddScoped<ISinhVienRepository, SinhVienRepository>();
 builder.Services.AddScoped<ISinhVienService, SinhVienService>();
 builder.Services.AddScoped<IGiangVienRepository, GiangVienRepository>();
 builder.Services.AddScoped<IGiangVienService, GiangVienService>();
+builder.Services.AddScoped<IMonHocRepository, MonHocRepository>();
+builder.Services.AddScoped<IMonHocService, MonHocService>();
+builder.Services.AddScoped<ILopRepository, LopRepository>();
+builder.Services.AddScoped<ILopService, LopService>();
 builder.Services.AddControllers();
 
 
