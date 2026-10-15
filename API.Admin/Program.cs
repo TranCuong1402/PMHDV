@@ -1,4 +1,6 @@
+using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using QlyDaoTao.API.Admin.Middleware;
 using QlyDaoTao.BLL.Interfaces;
 using QlyDaoTao.BLL.Services;
 using QlyDaoTao.DAL.Data;
@@ -20,6 +22,12 @@ builder.Services.AddScoped<IMonHocRepository, MonHocRepository>();
 builder.Services.AddScoped<IMonHocService, MonHocService>();
 builder.Services.AddScoped<ILopRepository, LopRepository>();
 builder.Services.AddScoped<ILopService, LopService>();
+builder.Services.AddScoped<INienKhoaRepository, NienKhoaRepository>();
+builder.Services.AddScoped<INienKhoaService, NienKhoaService>();
+builder.Services.AddScoped<INienKhoaRepository, NienKhoaRepository>();
+builder.Services.AddScoped<INienKhoaService, NienKhoaService>();
+builder.Services.AddScoped<IHocKyRepository, HocKyRepository>();
+builder.Services.AddScoped<IHocKyService, HocKyService>();
 builder.Services.AddControllers();
 
 
@@ -27,6 +35,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+// Đo thời gian xử lý request
+app.UseMiddleware<RequestTimingMiddleware>();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
 
 if (app.Environment.IsDevelopment())
 {
