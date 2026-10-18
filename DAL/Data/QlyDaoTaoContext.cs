@@ -259,6 +259,14 @@ namespace QlyDaoTao.DAL.Data
             // LICH THI
             // =====================================================
 
+         
+            modelBuilder.Entity<LichThi>()
+                .HasKey(x => x.MaLichThi);
+
+            modelBuilder.Entity<LichThi>()
+                .Property(x => x.MaLichThi)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<LichThi>()
                 .HasOne<LopHocPhan>()
                 .WithMany()

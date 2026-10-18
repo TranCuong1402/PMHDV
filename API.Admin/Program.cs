@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QlyDaoTao.API.Admin.Middleware;
 using QlyDaoTao.BLL.Interfaces;
 using QlyDaoTao.BLL.Services;
+using QlyDaoTao.BLL.Services.Interfaces;
 using QlyDaoTao.DAL.Data;
 using QlyDaoTao.DAL.Repositories;
 using QlyDaoTao.DAL.Repositories.Interfaces;
@@ -28,6 +29,14 @@ builder.Services.AddScoped<INienKhoaRepository, NienKhoaRepository>();
 builder.Services.AddScoped<INienKhoaService, NienKhoaService>();
 builder.Services.AddScoped<IHocKyRepository, HocKyRepository>();
 builder.Services.AddScoped<IHocKyService, HocKyService>();
+builder.Services.AddScoped<ILichHocRepository, LichHocRepository>();
+builder.Services.AddScoped<ILichHocService, LichHocService>();
+builder.Services.AddScoped<ILichThiRepository, LichThiRepository>();
+builder.Services.AddScoped<ILichThiService, LichThiService>();
+builder.Services.AddScoped<ILopHocPhanRepository, LopHocPhanRepository>();
+builder.Services.AddScoped<ILopHocPhanService, LopHocPhanService>();
+builder.Services.AddScoped<IDangKyHocPhanRepository,DangKyHocPhanRepository>();
+builder.Services.AddScoped<IDangKyHocPhanService,DangKyHocPhanService>();
 builder.Services.AddControllers();
 
 
