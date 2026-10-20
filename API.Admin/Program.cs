@@ -37,6 +37,12 @@ builder.Services.AddScoped<ILopHocPhanRepository, LopHocPhanRepository>();
 builder.Services.AddScoped<ILopHocPhanService, LopHocPhanService>();
 builder.Services.AddScoped<IDangKyHocPhanRepository,DangKyHocPhanRepository>();
 builder.Services.AddScoped<IDangKyHocPhanService,DangKyHocPhanService>();
+builder.Services.AddScoped<ILopHocPhanSinhVienRepository,LopHocPhanSinhVienRepository>();
+builder.Services.AddScoped<ILopHocPhanSinhVienService,LopHocPhanSinhVienService>();
+builder.Services.AddScoped<IDiemDanhRepository, DiemDanhRepository>();
+builder.Services.AddScoped<IDiemDanhService, DiemDanhService>();
+
+
 builder.Services.AddControllers();
 
 
