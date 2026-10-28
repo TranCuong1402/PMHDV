@@ -21,7 +21,12 @@ builder.Services.AddScoped<ILopHocPhanSinhVienRepository,LopHocPhanSinhVienRepos
 builder.Services.AddScoped<ILopHocPhanSinhVienService,LopHocPhanSinhVienService>();
 builder.Services.AddScoped<ICanhBaoVangRepository, CanhBaoVangRepository>();
 builder.Services.AddScoped<ICanhBaoVangService, CanhBaoVangService>();
-
+builder.Services.AddScoped<ILichGiangDayRepository,LichGiangDayRepository>();
+builder.Services.AddScoped<ILichGiangDayService,LichGiangDayService>();
+builder.Services.AddScoped<IThongBaoRepository, ThongBaoRepository>();
+builder.Services.AddScoped<IThongBaoService, ThongBaoService>();
+builder.Services.AddScoped<IDiemRepository, DiemRepository>();
+builder.Services.AddScoped<IDiemService, DiemService>();
 builder.Services.AddDbContext<QlyDaoTaoContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 var app = builder.Build();
 

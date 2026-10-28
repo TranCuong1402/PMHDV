@@ -1,4 +1,5 @@
 ﻿
+using QlyDaoTao.Model.DTOs;
 using QlyDaoTao.Model.Entities;
 
 namespace QlyDaoTao.BLL.Interfaces
@@ -12,5 +13,8 @@ namespace QlyDaoTao.BLL.Interfaces
         Task<(bool Success, string Message)> UpdateAsync(
             int maLichHoc, LichHoc lichHoc);
         Task<(bool Success, string Message)> DeleteAsync(int maLichHoc);
+        Task SuaLichDayAsync(int maLichHoc, SuaLichDayRequest request);
+        Task ChonPhongDayAsync(int maLichHoc,ChonPhongDayRequest request);
+        Task<KiemTraTrungLichResponse> KiemTraTrungLichAsync(KiemTraTrungLichRequest request);
     }
 }

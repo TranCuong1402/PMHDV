@@ -1,4 +1,5 @@
 ﻿
+using QlyDaoTao.Model.DTOs;
 using QlyDaoTao.Model.Entities;
 
 namespace QlyDaoTao.DAL.Repositories.Interfaces
@@ -21,6 +22,28 @@ namespace QlyDaoTao.DAL.Repositories.Interfaces
             TimeSpan gioBatDau,
             TimeSpan gioKetThuc,
             int? excludeMaLichHoc = null);
+
+        Task<string?> GetMaGiangVienByLichHocAsync(int maLichHoc);
+
+        Task<bool> HasScheduleConflictForUpdateAsync(
+            int maLichHoc,
+            string maLopHocPhan,
+            DateTime ngayHoc,
+            TimeSpan gioBatDau,
+            TimeSpan gioKetThuc);
+
+        Task<bool> PhongExistsAsync(string maPhong);
+
+        Task<bool> HasRoomConflictAsync(
+            int maLichHoc,
+            string maPhong,
+            DateTime ngayHoc,
+            TimeSpan gioBatDau,
+            TimeSpan gioKetThuc);
+
+        Task<KiemTraTrungLichResponse> KiemTraTrungLichAsync(
+            KiemTraTrungLichRequest request);
+
         Task SaveChangesAsync();
     }
 }
