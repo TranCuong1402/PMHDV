@@ -59,9 +59,14 @@ namespace QlyDaoTao.DAL.Data
             modelBuilder.Entity<Phong>().ToTable("Phong");
             modelBuilder.Entity<PhucKhao>().ToTable("PhucKhao");
             modelBuilder.Entity<SinhVien>().ToTable("SinhVien");
-            modelBuilder.Entity<TaiKhoan>().ToTable("TaiKhoan");
+            modelBuilder.Entity<TaiKhoan>().HasKey(x => x.Id);
             modelBuilder.Entity<ThongBao>().ToTable("ThongBao");
+            modelBuilder.Entity<TaiKhoan>(entity =>
+            {
+                entity.ToTable("TaiKhoan");
 
+                entity.HasKey(x => x.Id);
+            });
 
             // =====================================================
             // PRIMARY KEY
@@ -116,7 +121,7 @@ namespace QlyDaoTao.DAL.Data
                 .HasKey(x => x.MaSV);
 
             modelBuilder.Entity<TaiKhoan>()
-                .HasKey(x => x.Id);
+                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<ThongBao>()
                 .HasKey(x => x.Id);

@@ -5,6 +5,7 @@ using QlyDaoTao.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using QlyDaoTao.DAL.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -27,6 +28,8 @@ builder.Services.AddScoped<IThongBaoRepository, ThongBaoRepository>();
 builder.Services.AddScoped<IThongBaoService, ThongBaoService>();
 builder.Services.AddScoped<IDiemRepository, DiemRepository>();
 builder.Services.AddScoped<IDiemService, DiemService>();
+builder.Services.AddScoped<IPhucKhaoRepository, PhucKhaoRepository>();
+builder.Services.AddScoped<IPhucKhaoService, PhucKhaoService>();
 builder.Services.AddDbContext<QlyDaoTaoContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 var app = builder.Build();
 

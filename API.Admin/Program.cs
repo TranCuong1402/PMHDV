@@ -25,8 +25,6 @@ builder.Services.AddScoped<ILopRepository, LopRepository>();
 builder.Services.AddScoped<ILopService, LopService>();
 builder.Services.AddScoped<INienKhoaRepository, NienKhoaRepository>();
 builder.Services.AddScoped<INienKhoaService, NienKhoaService>();
-builder.Services.AddScoped<INienKhoaRepository, NienKhoaRepository>();
-builder.Services.AddScoped<INienKhoaService, NienKhoaService>();
 builder.Services.AddScoped<IHocKyRepository, HocKyRepository>();
 builder.Services.AddScoped<IHocKyService, HocKyService>();
 builder.Services.AddScoped<ILichHocRepository, LichHocRepository>();
@@ -61,20 +59,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
