@@ -38,7 +38,12 @@ builder.Services.AddDbContext<QlyDaoTaoContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
-
+Console.WriteLine("========== KIEM TRA JWT CORE ==========");
+Console.WriteLine("Issuer: " + builder.Configuration["Jwt:Issuer"]);
+Console.WriteLine("Audience: " + builder.Configuration["Jwt:Audience"]);
+Console.WriteLine("Key co ton tai: " +
+    !string.IsNullOrEmpty(builder.Configuration["Jwt:Key"]));
+Console.WriteLine("=======================================");
 // Controllers
 builder.Services.AddControllers();
 

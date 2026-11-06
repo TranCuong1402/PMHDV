@@ -35,14 +35,14 @@ public class JwtService
         };
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(
-                double.Parse(_configuration["Jwt:ExpiresInMinutes"]!)
-            ),
-            signingCredentials: credentials
-        );
+      issuer: _configuration["Jwt:Issuer"],
+      audience: _configuration["Jwt:Audience"],
+      claims: claims,
+      expires: DateTime.Now.AddMinutes(
+          double.Parse(_configuration["Jwt:ExpiresInMinutes"]!)
+      ),
+      signingCredentials: credentials
+  );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QlyDaoTao.BLL.Interfaces;
 using QlyDaoTao.Model.Entities;
-
+using Microsoft.AspNetCore.Authorization;
 namespace QlyDaoTao.API.Admin.Controllers
 {
     [ApiController]
     [Route("api/admin/sinhvien")]
+    [Authorize(Roles = "Admin")]
     public class SinhVienController : ControllerBase
     {
         private readonly ISinhVienService _service;

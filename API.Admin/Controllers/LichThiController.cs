@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QlyDaoTao.BLL.Interfaces;
 using QlyDaoTao.Model.Entities;
@@ -7,6 +8,7 @@ namespace QlyDaoTao.API.Admin.Controllers
 {
     [ApiController]
     [Route("api/admin/lichthi")]
+    [Authorize(Roles = "Admin,GiangVien")]
     public class LichThiController : ControllerBase
     {
         private readonly ILichThiService _service;

@@ -5,10 +5,16 @@ namespace QlyDaoTao.BLL.Services.Interfaces
 {
     public interface IDiemDanhService
     {
-        Task<string> DiemDanhAsync(DiemDanhRequest request);
+        Task<string> DiemDanhAsync(
+             DiemDanhRequest request,
+             int idTaiKhoan,
+             string vaiTro);
+
         Task<string> SuaDiemDanhAsync(
             int maLichHoc,
             string maSV,
-            SuaDiemDanhRequest request);
+            SuaDiemDanhRequest request,
+            int idTaiKhoan,
+            string vaiTro);
     }
 }

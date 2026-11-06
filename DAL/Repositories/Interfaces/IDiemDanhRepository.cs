@@ -11,7 +11,9 @@ namespace QlyDaoTao.DAL.Repositories.Interfaces
             int maLichHoc, string maSV);
         Task AddAsync(DiemDanh diemDanh);
         Task UpdateAsync(DiemDanh diemDanh);
-
+        Task<bool> GiangVienPhuTrachLichHocAsync(
+         int idTaiKhoan,
+         int maLichHoc);
         Task SaveChangesAsync();
     }
 }

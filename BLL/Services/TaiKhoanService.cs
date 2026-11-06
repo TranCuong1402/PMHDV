@@ -9,13 +9,7 @@ public class TaiKhoanService : ITaiKhoanService
     private readonly ITaiKhoanRepository _repository;
     private readonly JwtService _jwtService;
     private readonly EmailService _emailService;
-    public TaiKhoanService(
-        ITaiKhoanRepository repository,
-        JwtService jwtService)
-    {
-        _repository = repository;
-        _jwtService = jwtService;
-    }
+   
     public TaiKhoanService(
     ITaiKhoanRepository repository,
     JwtService jwtService,

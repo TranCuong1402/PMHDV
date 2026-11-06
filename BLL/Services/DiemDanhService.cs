@@ -20,8 +20,33 @@ namespace QlyDaoTao.BLL.Services
             _repository = repository;
         }
 
+        // Kiểm tra quyền giảng viên phụ trách lịch học
+        private async Task KiemTraQuyenAsync(
+            int maLichHoc,
+            int idTaiKhoan,
+            string vaiTro)
+        {
+            if (vaiTro == "Admin")
+                return;
+
+            if (vaiTro != "GiangVien")
+                throw new UnauthorizedAccessException(
+                    "Bạn không có quyền thực hiện chức năng này.");
+
+            bool duocPhep = await _repository
+                .GiangVienPhuTrachLichHocAsync(
+                    idTaiKhoan,
+                    maLichHoc);
+
+            if (!duocPhep)
+                throw new UnauthorizedAccessException(
+                    "Bạn không được phân công giảng dạy lớp học này.");
+        }
+
         public async Task<string> DiemDanhAsync(
-            DiemDanhRequest request)
+            DiemDanhRequest request,
+            int idTaiKhoan,
+            string vaiTro)
         {
             if (request == null)
                 throw new ArgumentException(
@@ -40,12 +65,17 @@ namespace QlyDaoTao.BLL.Services
 
             if (!TrangThaiHopLe.Contains(trangThai))
                 throw new ArgumentException(
-                    "Trạng thái phải là Có mặt, Vắng, Muộn hoặc Có phép.");
+                    "Trạng thái điểm danh không hợp lệ.");
 
             if (!await _repository.LichHocExistsAsync(
-                    request.MaLichHoc))
+                request.MaLichHoc))
                 throw new ArgumentException(
                     "Lịch học không tồn tại.");
+
+            await KiemTraQuyenAsync(
+                request.MaLichHoc,
+                idTaiKhoan,
+                vaiTro);
 
             if (!await _repository.SinhVienExistsAsync(maSV))
                 throw new ArgumentException(
@@ -57,8 +87,7 @@ namespace QlyDaoTao.BLL.Services
 
             if (existing != null)
                 throw new ArgumentException(
-                    "Sinh viên đã được điểm danh ở lịch học này. " +
-                    "Sử dụng chức năng sửa điểm danh để cập nhật.");
+                    "Sinh viên đã được điểm danh ở lịch học này.");
 
             var diemDanh = new DiemDanh
             {
@@ -79,7 +108,9 @@ namespace QlyDaoTao.BLL.Services
         public async Task<string> SuaDiemDanhAsync(
             int maLichHoc,
             string maSV,
-            SuaDiemDanhRequest request)
+            SuaDiemDanhRequest request,
+            int idTaiKhoan,
+            string vaiTro)
         {
             if (request == null)
                 throw new ArgumentException(
@@ -97,17 +128,24 @@ namespace QlyDaoTao.BLL.Services
 
             if (!TrangThaiHopLe.Contains(trangThai))
                 throw new ArgumentException(
-                    "Trạng thái phải là Có mặt, Vắng, Muộn hoặc Có phép.");
+                    "Trạng thái điểm danh không hợp lệ.");
 
             if (!await _repository.LichHocExistsAsync(maLichHoc))
                 throw new ArgumentException(
                     "Lịch học không tồn tại.");
 
+            await KiemTraQuyenAsync(
+                maLichHoc,
+                idTaiKhoan,
+                vaiTro);
+
             if (!await _repository.SinhVienExistsAsync(maSV))
                 throw new ArgumentException(
                     "Sinh viên không tồn tại hoặc đã bị khóa.");
 
-            var existing = await _repository.GetByLichHocAndSinhVienAsync(maLichHoc, maSV);
+            var existing =
+                await _repository.GetByLichHocAndSinhVienAsync(
+                    maLichHoc, maSV);
 
             if (existing == null)
                 throw new ArgumentException(

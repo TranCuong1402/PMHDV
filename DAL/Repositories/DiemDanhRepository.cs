@@ -48,6 +48,23 @@ namespace QlyDaoTao.DAL.Repositories
             _context.DiemDanhs.Update(diemDanh);
             return Task.CompletedTask;
         }
+        public Task<bool> GiangVienPhuTrachLichHocAsync(
+    int idTaiKhoan,
+    int maLichHoc)
+        {
+            return (
+                from lh in _context.LichHocs
+                join lhp in _context.LopHocPhans
+                    on lh.MaLopHocPhan equals lhp.MaLopHocPhan
+                join gv in _context.GiangViens
+                    on lhp.MaGiangVien equals gv.MaGiangVien
+                where lh.MaLichHoc == maLichHoc
+                      && gv.IdTaiKhoan == idTaiKhoan
+                      && gv.TrangThai
+                      && lhp.TrangThai
+                select lh
+            ).AnyAsync();
+        }
 
     }
 }
