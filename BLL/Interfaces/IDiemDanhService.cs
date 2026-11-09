@@ -1,5 +1,6 @@
 ﻿
 using QlyDaoTao.Model.DTOs;
+using QlyDaoTao.Model.Entities;
 
 namespace QlyDaoTao.BLL.Services.Interfaces
 {
@@ -16,5 +17,25 @@ namespace QlyDaoTao.BLL.Services.Interfaces
             SuaDiemDanhRequest request,
             int idTaiKhoan,
             string vaiTro);
+        Task<List<DiemDanh>> GetAllAsync(
+         int idTaiKhoan,
+         string vaiTro);
+
+        Task<List<DiemDanh>> GetByLichHocAsync(
+            int maLichHoc,
+            int idTaiKhoan,
+            string vaiTro);
+        Task<string> XoaDiemDanhAsync(
+    int maLichHoc,
+    string maSV,
+    int idTaiKhoan,
+    string vaiTro);
+        Task<List<SinhVienDiemDanhDto>>
+    LayDanhSachSinhVienTheoLichHocAsync(
+        int maLichHoc,
+        int idTaiKhoan,
+        string vaiTro
+    );
+
     }
 }

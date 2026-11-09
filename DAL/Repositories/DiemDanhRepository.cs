@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using QlyDaoTao.DAL.Data;
 using QlyDaoTao.DAL.Repositories.Interfaces;
+using QlyDaoTao.Model.DTOs;
 using QlyDaoTao.Model.Entities;
 
 namespace QlyDaoTao.DAL.Repositories
@@ -64,6 +65,85 @@ namespace QlyDaoTao.DAL.Repositories
                       && lhp.TrangThai
                 select lh
             ).AnyAsync();
+        }
+        public Task<List<DiemDanh>> GetAllAsync()
+        {
+            return _context.DiemDanhs
+                .AsNoTracking()
+                .OrderByDescending(x => x.ThoiGianDiemDanh)
+                .ToListAsync();
+        }
+
+        public Task<List<DiemDanh>> GetByLichHocAsync(
+            int maLichHoc)
+        {
+            return _context.DiemDanhs
+                .AsNoTracking()
+                .Where(x => x.MaLichHoc == maLichHoc)
+                .OrderByDescending(x => x.ThoiGianDiemDanh)
+                .ToListAsync();
+        }
+        public Task<List<DiemDanh>> GetByGiangVienAsync(
+    int idTaiKhoan)
+        {
+            return (
+                from dd in _context.DiemDanhs.AsNoTracking()
+                join lh in _context.LichHocs
+                    on dd.MaLichHoc equals lh.MaLichHoc
+                join lhp in _context.LopHocPhans
+                    on lh.MaLopHocPhan equals lhp.MaLopHocPhan
+                join gv in _context.GiangViens
+                    on lhp.MaGiangVien equals gv.MaGiangVien
+                where gv.IdTaiKhoan == idTaiKhoan
+                      && gv.TrangThai
+                      && lhp.TrangThai
+                orderby dd.ThoiGianDiemDanh descending
+                select dd
+            ).ToListAsync();
+        }
+        public Task DeleteAsync(DiemDanh diemDanh)
+        {
+            _context.DiemDanhs.Remove(diemDanh);
+            return Task.CompletedTask;
+        }
+        public async Task<List<SinhVienDiemDanhDto>>
+    GetDanhSachSinhVienTheoLichHocAsync(int maLichHoc)
+        {
+            var query =
+                from lh in _context.LichHocs
+
+                join dk in _context.DangKyHocPhans
+                    on lh.MaLopHocPhan equals dk.MaLopHocPhan
+
+                join dd in _context.DiemDanhs
+                    .Where(x => x.MaLichHoc == maLichHoc)
+                    on dk.MaSV equals dd.MaSV into diemDanhGroup
+
+                from dd in diemDanhGroup.DefaultIfEmpty()
+
+                where lh.MaLichHoc == maLichHoc
+
+                select new SinhVienDiemDanhDto
+                {
+                    MaSV = dk.MaSV,
+
+                    TrangThaiDiemDanh =
+                        dd == null ? null : dd.TrangThai,
+
+                    ThoiGianDiemDanh =
+                        dd == null ? null : dd.ThoiGianDiemDanh,
+
+                    LyDo =
+                        dd == null ? null : dd.LyDo,
+
+                    DaDiemDanh = dd != null,
+
+                    TrangThaiDangKy = dk.TrangThai
+                };
+
+            return await query
+                .Distinct()
+                .ToListAsync();
         }
 
     }

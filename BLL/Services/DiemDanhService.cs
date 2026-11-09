@@ -159,5 +159,116 @@ namespace QlyDaoTao.BLL.Services
 
             return "Sửa điểm danh sinh viên thành công.";
         }
+        public async Task<List<DiemDanh>> GetAllAsync(
+    int idTaiKhoan,
+    string vaiTro)
+        {
+            if (vaiTro == "Admin")
+            {
+                return await _repository.GetAllAsync();
+            }
+
+            if (vaiTro == "GiangVien")
+            {
+                return await _repository.GetByGiangVienAsync(
+                    idTaiKhoan);
+            }
+
+            throw new UnauthorizedAccessException(
+                "Bạn không có quyền xem danh sách điểm danh.");
+        }
+
+        public async Task<List<DiemDanh>> GetByLichHocAsync(
+            int maLichHoc,
+            int idTaiKhoan,
+            string vaiTro)
+        {
+            if (maLichHoc <= 0)
+                throw new ArgumentException(
+                    "Mã lịch học không hợp lệ.");
+
+            if (!await _repository.LichHocExistsAsync(maLichHoc))
+                throw new ArgumentException(
+                    "Lịch học không tồn tại.");
+
+            await KiemTraQuyenAsync(
+                maLichHoc,
+                idTaiKhoan,
+                vaiTro);
+
+            return await _repository.GetByLichHocAsync(maLichHoc);
+        }
+        public async Task<string> XoaDiemDanhAsync(
+    int maLichHoc,
+    string maSV,
+    int idTaiKhoan,
+    string vaiTro)
+        {
+            maSV = maSV?.Trim() ?? "";
+
+            // Kiểm tra mã lịch học
+            if (maLichHoc <= 0)
+                throw new ArgumentException(
+                    "Mã lịch học không hợp lệ.");
+
+            // Kiểm tra mã sinh viên
+            if (string.IsNullOrWhiteSpace(maSV))
+                throw new ArgumentException(
+                    "Mã sinh viên không được để trống.");
+
+            // Kiểm tra lịch học tồn tại
+            if (!await _repository.LichHocExistsAsync(maLichHoc))
+                throw new ArgumentException(
+                    "Lịch học không tồn tại.");
+
+            // Kiểm tra quyền Admin hoặc Giảng viên
+            await KiemTraQuyenAsync(
+                maLichHoc,
+                idTaiKhoan,
+                vaiTro);
+
+            // Tìm bản ghi điểm danh
+            var existing =
+                await _repository.GetByLichHocAndSinhVienAsync(
+                    maLichHoc,
+                    maSV);
+
+            if (existing == null)
+                throw new ArgumentException(
+                    "Không tìm thấy bản ghi điểm danh cần xóa.");
+
+            // Xóa bản ghi
+            await _repository.DeleteAsync(existing);
+            await _repository.SaveChangesAsync();
+
+            return "Xóa bản ghi điểm danh thành công.";
+        }
+        public async Task<List<SinhVienDiemDanhDto>>
+    LayDanhSachSinhVienTheoLichHocAsync(
+        int maLichHoc,
+        int idTaiKhoan,
+        string vaiTro)
+        {
+            if (maLichHoc <= 0)
+            {
+                throw new ArgumentException("Mã lịch học không hợp lệ.");
+            }
+
+            // Kiểm tra lịch học tồn tại
+            bool lichHocTonTai =
+                await _repository.LichHocExistsAsync(maLichHoc);
+
+            if (!lichHocTonTai)
+            {
+                throw new Exception("Lịch học không tồn tại.");
+            }
+
+            // Kiểm tra quyền Admin / Giảng viên
+            await KiemTraQuyenAsync(maLichHoc, idTaiKhoan, vaiTro);
+
+            // Lấy danh sách sinh viên đã đăng ký
+            return await _repository
+                .GetDanhSachSinhVienTheoLichHocAsync(maLichHoc);
+        }
     }
 }

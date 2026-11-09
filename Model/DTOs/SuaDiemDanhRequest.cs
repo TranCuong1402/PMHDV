@@ -11,3 +11,4 @@ namespace QlyDaoTao.Model.DTOs
         public string? LyDo { get; set; }
     }
 }
+    
