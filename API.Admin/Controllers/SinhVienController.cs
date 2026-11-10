@@ -6,7 +6,7 @@ namespace QlyDaoTao.API.Admin.Controllers
 {
     [ApiController]
     [Route("api/admin/sinhvien")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,GiangVien")]
     public class SinhVienController : ControllerBase
     {
         private readonly ISinhVienService _service;
