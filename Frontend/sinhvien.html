@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sinh viên - QLDAOTAO</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-logo">🎓</span>
+      <div>
+        <div class="sidebar-title">QL Đào Tạo</div>
+        <div class="sidebar-subtitle">Sinh viên</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Tổng quan</div>
+      <div class="nav-item active" data-page="page-dashboard">
+        <span class="nav-icon">🏠</span><span class="nav-label">Tổng quan</span>
+      </div>
+      <div class="nav-section">Cá nhân</div>
+      <div class="nav-item" data-page="page-profile">
+        <span class="nav-icon">👤</span><span class="nav-label">Thông tin cá nhân</span>
+      </div>
+      <div class="nav-section">Học tập</div>
+      <div class="nav-item" data-page="page-lichhoc">
+        <span class="nav-icon">📅</span><span class="nav-label">Lịch học</span>
+      </div>
+      <div class="nav-item" data-page="page-lichthi">
+        <span class="nav-icon">📝</span><span class="nav-label">Lịch thi</span>
+      </div>
+      <div class="nav-item" data-page="page-chuyencan">
+        <span class="nav-icon">📊</span><span class="nav-label">Chuyên cần</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="sidebar-user-avatar">S</div>
+        <div>
+          <div class="user-name" id="sidebar-user-name">Sinh viên</div>
+          <div class="user-role" id="sidebar-user-role">Sinh viên</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Đăng xuất</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="top-header">
+      <div>
+        <div class="page-title" id="page-title">Tổng quan</div>
+        <div class="page-subtitle" id="page-subtitle">Chào mừng bạn trở lại!</div>
+      </div>
+      <div class="header-actions">
+        <span class="badge badge-sinhvien">👨‍🎓 SINH VIÊN</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <!-- DASHBOARD -->
+      <div id="page-dashboard" class="page active">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon blue">📅</div><div><div class="stat-value" id="dash-so-monhoc">—</div><div class="stat-label">Môn đang học</div></div></div>
+          <div class="stat-card"><div class="stat-icon orange">📝</div><div><div class="stat-value" id="dash-so-thi">—</div><div class="stat-label">Lịch thi sắp tới</div></div></div>
+          <div class="stat-card"><div class="stat-icon green">✅</div><div><div class="stat-value" id="dash-ty-le-diemdanh">—</div><div class="stat-label">Tỷ lệ điểm danh</div></div></div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="card">
+            <div class="card-header"><span class="card-title">📅 Lịch học sắp tới</span></div>
+            <div class="card-body" id="dash-upcoming-lich">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">📝 Lịch thi sắp tới</span></div>
+            <div class="card-body" id="dash-upcoming-thi">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THÔNG TIN CÁ NHÂN -->
+      <div id="page-profile" class="page">
+        <div class="card" style="max-width:680px;">
+          <div class="card-header">
+            <span class="card-title">👤 Thông tin cá nhân</span>
+            <button class="btn btn-primary btn-sm" onclick="toggleEditSVProfile()">✏️ Chỉnh sửa</button>
+          </div>
+          <div class="card-body">
+            <div id="sv-profile-view">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+            <div id="sv-profile-edit" style="display:none;">
+              <div class="form-grid">
+                <div class="form-group"><label>Mã sinh viên</label><input type="text" id="svp-ma" class="form-control" disabled></div>
+                <div class="form-group"><label>Họ và tên *</label><input type="text" id="svp-hoten" class="form-control" placeholder="Họ và tên"></div>
+                <div class="form-group"><label>Ngày sinh</label><input type="date" id="svp-ngaysinh" class="form-control"></div>
+                <div class="form-group"><label>Giới tính</label>
+                  <select id="svp-gioitinh" class="form-control">
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                  </select>
+                </div>
+                <div class="form-group"><label>Email</label><input type="email" id="svp-email" class="form-control" placeholder="Email"></div>
+                <div class="form-group"><label>Số điện thoại</label><input type="text" id="svp-sdt" class="form-control" placeholder="SĐT"></div>
+                <div class="form-group full-width"><label>Địa chỉ</label><input type="text" id="svp-diachi" class="form-control" placeholder="Địa chỉ"></div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:16px;">
+                <button class="btn btn-secondary" onclick="toggleEditSVProfile()">Hủy</button>
+                <button class="btn btn-primary" onclick="saveSVProfile()">💾 Lưu thay đổi</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LỊCH HỌC -->
+      <div id="page-lichhoc" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📅 Lịch học của tôi</span>
+            <div class="toolbar">
+              <select class="filter-select" id="sv-lh-filter" onchange="filterSVLichHoc()">
+                <option value="">Tất cả</option>
+                <option value="this">Tuần này</option>
+                <option value="next">Tuần sau</option>
+                <option value="upcoming">Sắp tới</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="sv-lichhoc-list" class="schedule-grid">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LỊCH THI -->
+      <div id="page-lichthi" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📝 Lịch thi của tôi</span>
+          </div>
+          <div class="card-body">
+            <div id="sv-lichthi-list" class="schedule-grid">
+              <div class="loading"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" style="margin-top:16px;">
+          <div class="card-header"><span class="card-title">📋 Danh sách lịch thi (bảng)</span></div>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Mã LT</th><th>Lớp HP</th><th>Ngày thi</th><th>Giờ</th><th>Phòng</th><th>Hình thức</th><th>Trạng thái</th></tr></thead>
+              <tbody id="sv-lichthi-table"><tr><td colspan="7" style="text-align:center;padding:20px"><div class="spinner" style="margin:auto"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHUYÊN CẦN -->
+      <div id="page-chuyencan" class="page">
+        <div class="tab-nav">
+          <button class="tab-btn active" data-tab="tab-cc-tonghop">📊 Tổng hợp</button>
+          <button class="tab-btn" data-tab="tab-cc-chitiet">📋 Chi tiết từng môn</button>
+        </div>
+        
+        <!-- Tổng hợp -->
+        <div id="tab-cc-tonghop" class="tab-content active">
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon green">✅</div><div><div class="stat-value" id="cc-so-co-mat">—</div><div class="stat-label">Buổi có mặt</div></div></div>
+            <div class="stat-card"><div class="stat-icon blue" style="background:#e0f2fe">⏰</div><div><div class="stat-value" id="cc-so-di-muon">—</div><div class="stat-label">Đi muộn</div></div></div>
+            <div class="stat-card"><div class="stat-icon orange">📄</div><div><div class="stat-value" id="cc-so-co-phep">—</div><div class="stat-label">Vắng có phép</div></div></div>
+            <div class="stat-card"><div class="stat-icon" style="background:#fef2f2">❌</div><div><div class="stat-value" id="cc-so-vang">—</div><div class="stat-label">Vắng không phép</div></div></div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header"><span class="card-title">📊 Tỷ lệ điểm danh theo môn</span></div>
+            <div class="table-container">
+              <table>
+                <thead><tr><th>Môn học / Lớp HP</th><th>Tổng buổi</th><th>Có mặt</th><th>Vắng</th><th>Tỷ lệ có mặt</th><th>Cảnh báo</th></tr></thead>
+                <tbody id="cc-tylevang-table"><tr><td colspan="6" style="text-align:center;padding:20px"><div class="spinner" style="margin:auto"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chi tiết từng môn -->
+        <div id="tab-cc-chitiet" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">📋 Lịch sử điểm danh chi tiết</span>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead><tr><th>Ngày</th><th>Lớp HP</th><th>Buổi học</th><th>Trạng thái</th><th>Lý do</th></tr></thead>
+                <tbody id="cc-chitiet-table"><tr><td colspan="5" style="text-align:center;padding:20px"><div class="spinner" style="margin:auto"></div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/common.js"></script>
+<script src="js/sinhvien.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng nhập - Hệ thống Quản lý Đào tạo</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.forgot-link { text-align: right; margin-top: -12px; margin-bottom: 16px; }
+.forgot-link a { font-size: 12px; color: var(--primary); font-weight: 600; }
+.otp-section { display: none; }
+.role-info { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px; }
+.role-card { text-align: center; padding: 10px 8px; border-radius: 8px; }
+.role-card.admin { background: #f3e8ff; }
+.role-card.gv { background: #e0f2fe; }
+.role-card.sv { background: #dcfce7; }
+.role-card .r-icon { font-size: 20px; }
+.role-card .r-name { font-size: 11px; font-weight: 700; margin-top: 4px; }
+.role-card.admin .r-name { color: #7c3aed; }
+.role-card.gv .r-name { color: #0369a1; }
+.role-card.sv .r-name { color: #15803d; }
+.error-msg { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; }
+.error-msg.show { display: block; }
+</style>
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">🎓</div>
+      <h1>Quản lý Đào tạo</h1>
+      <p>Hệ thống quản lý học tập và giảng dạy</p>
+    </div>
+    <div class="login-body">
+      <!-- ĐĂNG NHẬP -->
+      <div id="login-section">
+        <div class="form-group">
+          <label class="form-label">Tên đăng nhập</label>
+          <div class="input-group">
+            <span class="input-icon">👤</span>
+            <input type="text" id="tenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập..." autocomplete="username">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mật khẩu</label>
+          <div class="input-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="matKhau" class="form-control" placeholder="Nhập mật khẩu..." autocomplete="current-password">
+            <button class="toggle-password" onclick="togglePassword()" title="Hiện/ẩn mật khẩu">👁</button>
+          </div>
+        </div>
+        <div class="forgot-link">
+          <a href="#" onclick="showForgot()">Quên mật khẩu?</a>
+        </div>
+        <p id="login-error" class="error-msg"></p>
+        <button class="btn btn-primary btn-block" id="btn-login" onclick="doLogin()">
+          🔑 Đăng nhập
+        </button>
+        <div class="role-info">
+          <div class="role-card admin"><div class="r-icon">🛡️</div><div class="r-name">Admin</div></div>
+          <div class="role-card gv"><div class="r-icon">👨‍🏫</div><div class="r-name">Giảng viên</div></div>
+          <div class="role-card sv"><div class="r-icon">👨‍🎓</div><div class="r-name">Sinh viên</div></div>
+        </div>
+      </div>
+
+      <!-- QUÊN MẬT KHẨU -->
+      <div id="forgot-section" style="display:none;">
+        <h3 style="margin-bottom:16px;font-size:16px;">🔑 Quên mật khẩu</h3>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="forgot-email" class="form-control" placeholder="Nhập email của bạn...">
+        </div>
+        <p id="forgot-error" class="error-msg"></p>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-secondary" onclick="showLogin()">← Quay lại</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="doForgot()">📧 Gửi OTP</button>
+        </div>
+      </div>
+
+      <!-- XÁC THỰC OTP -->
+      <div id="otp-section" style="display:none;">
+        <h3 style="margin-bottom:16px;font-size:16px;">📱 Xác thực OTP</h3>
+        <div class="info-box">OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư.</div>
+        <div class="form-group">
+          <label class="form-label">Mã OTP</label>
+          <input type="text" id="otp-code" class="form-control" placeholder="Nhập mã OTP 6 chữ số..." maxlength="6" style="letter-spacing:4px;font-size:18px;text-align:center;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mật khẩu mới</label>
+          <input type="password" id="new-password" class="form-control" placeholder="Nhập mật khẩu mới...">
+        </div>
+        <p id="otp-error" class="error-msg"></p>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-secondary" onclick="showForgot()">← Quay lại</button>
+          <button class="btn btn-primary" style="flex:1;" onclick="doVerifyOtp()">✅ Xác nhận</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/common.js"></script>
+<script>
+// Chuyển hướng nếu đã đăng nhập
+if (Auth.isLoggedIn()) {
+  navigate(Auth.getRole());
+}
+
+function togglePassword() {
+  const inp = document.getElementById('matKhau');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function showLogin() {
+  document.getElementById('login-section').style.display = '';
+  document.getElementById('forgot-section').style.display = 'none';
+  document.getElementById('otp-section').style.display = 'none';
+}
+function showForgot() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('forgot-section').style.display = '';
+  document.getElementById('otp-section').style.display = 'none';
+}
+function showOtp() {
+  document.getElementById('login-section').style.display = 'none';
+  document.getElementById('forgot-section').style.display = 'none';
+  document.getElementById('otp-section').style.display = '';
+}
+
+async function doLogin() {
+  const tenDangNhap = document.getElementById('tenDangNhap').value.trim();
+  const matKhau = document.getElementById('matKhau').value;
+  const errEl = document.getElementById('login-error');
+  errEl.classList.remove('show');
+  
+  if (!tenDangNhap || !matKhau) {
+    errEl.textContent = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.';
+    errEl.classList.add('show');
+    return;
+  }
+  
+  setLoading('btn-login', true);
+  try {
+    const data = await apiCore('/api/auth/login', 'POST', { tenDangNhap, matKhau }, false);
+    Auth.setSession(data);
+    showToast('Đăng nhập thành công! Đang chuyển hướng...', 'success');
+    setTimeout(() => navigate(data.vaiTro || data.role), 800);
+  } catch (e) {
+    errEl.textContent = e.message || 'Đăng nhập thất bại. Kiểm tra lại thông tin.';
+    errEl.classList.add('show');
+  } finally {
+    setLoading('btn-login', false);
+  }
+}
+
+async function doForgot() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const errEl = document.getElementById('forgot-error');
+  errEl.classList.remove('show');
+  
+  if (!email) { errEl.textContent = 'Vui lòng nhập email.'; errEl.classList.add('show'); return; }
+  
+  try {
+    await apiCore('/api/auth/forgot-password', 'POST', { email }, false);
+    showToast('OTP đã được gửi đến email của bạn.', 'success');
+    showOtp();
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.classList.add('show');
+  }
+}
+
+async function doVerifyOtp() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const otp = document.getElementById('otp-code').value.trim();
+  const matKhauMoi = document.getElementById('new-password').value;
+  const errEl = document.getElementById('otp-error');
+  errEl.classList.remove('show');
+  
+  if (!otp || !matKhauMoi) { errEl.textContent = 'Vui lòng nhập đầy đủ OTP và mật khẩu mới.'; errEl.classList.add('show'); return; }
+  
+  try {
+    await apiCore('/api/auth/verify-otp', 'POST', { email, maOtp: otp, matKhauMoi }, false);
+    showToast('Đặt lại mật khẩu thành công! Vui lòng đăng nhập.', 'success');
+    setTimeout(showLogin, 1500);
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.classList.add('show');
+  }
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('login-section').style.display !== 'none') doLogin();
+    else if (document.getElementById('forgot-section').style.display !== 'none') doForgot();
+    else if (document.getElementById('otp-section').style.display !== 'none') doVerifyOtp();
+  }
+});
+</script>
+</body>
+</html>

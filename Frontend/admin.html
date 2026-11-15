@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản trị - QLDAOTAO</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.role-badge-header { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #f3e8ff; color: #7c3aed; }
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-logo">🎓</span>
+      <div>
+        <div class="sidebar-title">QL Đào Tạo</div>
+        <div class="sidebar-subtitle">Admin Panel</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Tổng quan</div>
+      <div class="nav-item active" data-page="page-dashboard">
+        <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
+      </div>
+
+      <div class="nav-section">Tài khoản</div>
+      <div class="nav-item" data-page="page-taikhoan">
+        <span class="nav-icon">🔐</span><span class="nav-label">Quản lý tài khoản</span>
+      </div>
+
+      <div class="nav-section">Nhân sự</div>
+      <div class="nav-item" data-page="page-giangvien">
+        <span class="nav-icon">👨‍🏫</span><span class="nav-label">Giảng viên</span>
+      </div>
+      <div class="nav-item" data-page="page-sinhvien">
+        <span class="nav-icon">👨‍🎓</span><span class="nav-label">Sinh viên</span>
+      </div>
+
+      <div class="nav-section">Học vụ</div>
+      <div class="nav-item" data-page="page-monhoc">
+        <span class="nav-icon">📚</span><span class="nav-label">Môn học</span>
+      </div>
+      <div class="nav-item" data-page="page-lichhoc">
+        <span class="nav-icon">📅</span><span class="nav-label">Lịch học</span>
+      </div>
+      <div class="nav-item" data-page="page-lichthi">
+        <span class="nav-icon">📝</span><span class="nav-label">Lịch thi</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="sidebar-user-avatar">A</div>
+        <div>
+          <div class="user-name" id="sidebar-user-name">Admin</div>
+          <div class="user-role" id="sidebar-user-role">Quản trị viên</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Đăng xuất</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="top-header">
+      <div>
+        <div class="page-title" id="page-title">Dashboard</div>
+        <div class="page-subtitle" id="page-subtitle">Tổng quan hệ thống</div>
+      </div>
+      <div class="header-actions">
+        <span class="role-badge-header">🛡️ ADMIN</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <!-- ===== DASHBOARD ===== -->
+      <div id="page-dashboard" class="page active">
+        <div class="stats-grid" id="admin-stats">
+          <div class="stat-card"><div class="stat-icon blue">👨‍🏫</div><div><div class="stat-value" id="stat-gv">—</div><div class="stat-label">Giảng viên</div></div></div>
+          <div class="stat-card"><div class="stat-icon green">👨‍🎓</div><div><div class="stat-value" id="stat-sv">—</div><div class="stat-label">Sinh viên</div></div></div>
+          <div class="stat-card"><div class="stat-icon purple">📚</div><div><div class="stat-value" id="stat-mon">—</div><div class="stat-label">Môn học</div></div></div>
+          <div class="stat-card"><div class="stat-icon orange">📅</div><div><div class="stat-value" id="stat-lich">—</div><div class="stat-label">Lịch học</div></div></div>
+          <div class="stat-card"><div class="stat-icon cyan">📝</div><div><div class="stat-value" id="stat-thi">—</div><div class="stat-label">Lịch thi</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">📋 Giảng viên mới nhất</span></div>
+          <div class="table-container">
+            <table><thead><tr><th>Mã GV</th><th>Họ tên</th><th>Khoa</th><th>Email</th><th>Trạng thái</th></tr></thead>
+            <tbody id="dash-gv-table"><tr><td colspan="5" style="text-align:center;padding:20px">Đang tải...</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TÀI KHOẢN ===== -->
+      <div id="page-taikhoan" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🔐 Quản lý tài khoản</span>
+            <div class="toolbar">
+              <div class="search-box">
+                <input type="text" id="tk-search" placeholder="Tìm tài khoản..." oninput="searchTaiKhoan(this.value)">
+                <span class="search-icon">🔍</span>
+              </div>
+              <select class="filter-select" id="tk-filter-role" onchange="filterTaiKhoan()">
+                <option value="">Tất cả vai trò</option>
+                <option value="Admin">Admin</option>
+                <option value="GiangVien">Giảng viên</option>
+                <option value="SinhVien">Sinh viên</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>ID</th><th>Tên đăng nhập</th><th>Họ tên</th><th>Email</th><th>Vai trò</th><th>Trạng thái</th><th>Ngày tạo</th><th>Thao tác</th></tr></thead>
+              <tbody id="tk-table"><tr><td colspan="8" style="text-align:center;padding:20px">Đang tải...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== GIẢNG VIÊN ===== -->
+      <div id="page-giangvien" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">👨‍🏫 Danh sách giảng viên</span>
+            <div class="toolbar">
+              <div class="search-box">
+                <input type="text" id="gv-search" placeholder="Tìm giảng viên..." oninput="searchGV(this.value)">
+                <span class="search-icon">🔍</span>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openAddGV()">➕ Thêm mới</button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Mã GV</th><th>Họ tên</th><th>Khoa</th><th>Email</th><th>SĐT</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+              <tbody id="gv-table"><tr><td colspan="7" style="text-align:center;padding:20px">Đang tải...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SINH VIÊN ===== -->
+      <div id="page-sinhvien" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">👨‍🎓 Danh sách sinh viên</span>
+            <div class="toolbar">
+              <div class="search-box">
+                <input type="text" id="sv-search" placeholder="Tìm sinh viên..." oninput="searchSV(this.value)">
+                <span class="search-icon">🔍</span>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openAddSV()">➕ Thêm mới</button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Mã SV</th><th>Họ tên</th><th>Mã lớp</th><th>Ngày sinh</th><th>Giới tính</th><th>Email</th><th>SĐT</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+              <tbody id="sv-table"><tr><td colspan="9" style="text-align:center;padding:20px">Đang tải...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== MÔN HỌC ===== -->
+      <div id="page-monhoc" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📚 Quản lý môn học</span>
+            <div class="toolbar">
+              <div class="search-box">
+                <input type="text" id="mon-search" placeholder="Tìm môn học..." oninput="searchMon(this.value)">
+                <span class="search-icon">🔍</span>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openAddMon()">➕ Thêm môn học</button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Mã MH</th><th>Tên môn học</th><th>Số tín chỉ</th><th>Mô tả</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+              <tbody id="mon-table"><tr><td colspan="6" style="text-align:center;padding:20px">Đang tải...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== LỊCH HỌC ===== -->
+      <div id="page-lichhoc" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📅 Quản lý lịch học</span>
+            <div class="toolbar">
+              <div class="search-box">
+                <input type="text" id="lh-search" placeholder="Tìm theo mã lớp HP..." oninput="searchLH(this.value)">
+                <span class="search-icon">🔍</span>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openAddLH()">➕ Thêm lịch học</button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Mã LH</th><th>Lớp HP</th><th>Ngày học</th><th>Giờ BĐ</th><th>Giờ KT</th><th>Phòng</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+              <tbody id="lh-table"><tr><td colspan="8" style="text-align:center;padding:20px">Đang tải...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== LỊCH THI ===== -->
+      <div id="page-lichthi" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📝 Quản lý lịch thi</span>
+            <div class="toolbar">
+              <div class="search-box">
+                <input type="text" id="lt-search" placeholder="Tìm theo mã lớp HP..." oninput="searchLT(this.value)">
+                <span class="search-icon">🔍</span>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openAddLT()">➕ Thêm lịch thi</button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Mã LT</th><th>Lớp HP</th><th>Ngày thi</th><th>Giờ BĐ</th><th>Giờ KT</th><th>Phòng</th><th>Hình thức</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+              <tbody id="lt-table"><tr><td colspan="9" style="text-align:center;padding:20px">Đang tải...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Modal Tài khoản -->
+<div class="modal-overlay" id="modal-taikhoan">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-tk-title">Chỉnh sửa tài khoản</span>
+      <button class="modal-close" onclick="closeModal('modal-taikhoan')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="tk-id">
+      <div class="form-grid">
+        <div class="form-group"><label>Tên đăng nhập</label><input type="text" id="tk-tendangnhap" class="form-control" placeholder="Tên đăng nhập"></div>
+        <div class="form-group"><label>Họ tên</label><input type="text" id="tk-hoten" class="form-control" placeholder="Họ và tên"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="tk-email" class="form-control" placeholder="Email"></div>
+        <div class="form-group"><label>Vai trò</label>
+          <select id="tk-vaitro" class="form-control">
+            <option value="Admin">Admin</option>
+            <option value="GiangVien">Giảng viên</option>
+            <option value="SinhVien">Sinh viên</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Trạng thái</label>
+          <select id="tk-trangthai" class="form-control">
+            <option value="true">Hoạt động</option>
+            <option value="false">Khóa</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Mật khẩu mới (bỏ trống = không đổi)</label><input type="password" id="tk-matkhaumoi" class="form-control" placeholder="Mật khẩu mới..."></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-taikhoan')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveTaiKhoan()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Giảng viên -->
+<div class="modal-overlay" id="modal-gv">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-gv-title">Thêm giảng viên</span>
+      <button class="modal-close" onclick="closeModal('modal-gv')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="gv-id">
+      <div class="form-grid">
+        <div class="form-group"><label>Mã giảng viên *</label><input type="text" id="gv-ma" class="form-control" placeholder="VD: GV001"></div>
+        <div class="form-group"><label>Họ tên *</label><input type="text" id="gv-hoten" class="form-control" placeholder="Họ và tên"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="gv-email" class="form-control" placeholder="Email"></div>
+        <div class="form-group"><label>Số điện thoại</label><input type="text" id="gv-sdt" class="form-control" placeholder="SĐT"></div>
+        <div class="form-group"><label>Khoa</label><input type="text" id="gv-khoa" class="form-control" placeholder="Tên khoa"></div>
+        <div class="form-group"><label>Trạng thái</label>
+          <select id="gv-trangthai" class="form-control">
+            <option value="true">Hoạt động</option>
+            <option value="false">Khóa</option>
+          </select>
+        </div>
+        <div class="form-group"><label>ID Tài khoản</label><input type="number" id="gv-idtk" class="form-control" placeholder="ID tài khoản (nếu có)"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-gv')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveGV()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Sinh viên -->
+<div class="modal-overlay" id="modal-sv">
+  <div class="modal-box modal-lg">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-sv-title">Thêm sinh viên</span>
+      <button class="modal-close" onclick="closeModal('modal-sv')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="sv-id">
+      <div class="form-grid">
+        <div class="form-group"><label>Mã sinh viên *</label><input type="text" id="sv-ma" class="form-control" placeholder="VD: SV001"></div>
+        <div class="form-group"><label>Họ tên *</label><input type="text" id="sv-hoten" class="form-control" placeholder="Họ và tên"></div>
+        <div class="form-group"><label>Ngày sinh</label><input type="date" id="sv-ngaysinh" class="form-control"></div>
+        <div class="form-group"><label>Giới tính</label>
+          <select id="sv-gioitinh" class="form-control">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+            <option value="Khác">Khác</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="sv-email" class="form-control" placeholder="Email"></div>
+        <div class="form-group"><label>Số điện thoại</label><input type="text" id="sv-sdt" class="form-control" placeholder="SĐT"></div>
+        <div class="form-group full-width"><label>Địa chỉ</label><input type="text" id="sv-diachi" class="form-control" placeholder="Địa chỉ"></div>
+        <div class="form-group"><label>Mã lớp *</label><input type="text" id="sv-malop" class="form-control" placeholder="VD: CNTT01"></div>
+        <div class="form-group"><label>Trạng thái</label>
+          <select id="sv-trangthai" class="form-control">
+            <option value="true">Hoạt động</option>
+            <option value="false">Thôi học</option>
+          </select>
+        </div>
+        <div class="form-group"><label>ID Tài khoản</label><input type="number" id="sv-idtk" class="form-control" placeholder="ID tài khoản (nếu có)"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-sv')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveSV()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Môn học -->
+<div class="modal-overlay" id="modal-mon">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-mon-title">Thêm môn học</span>
+      <button class="modal-close" onclick="closeModal('modal-mon')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mon-id">
+      <div class="form-grid cols-1">
+        <div class="form-group"><label>Mã môn học *</label><input type="text" id="mon-ma" class="form-control" placeholder="VD: MH001"></div>
+        <div class="form-group"><label>Tên môn học *</label><input type="text" id="mon-ten" class="form-control" placeholder="Tên môn học"></div>
+        <div class="form-group"><label>Số tín chỉ *</label><input type="number" id="mon-sotinchi" class="form-control" placeholder="VD: 3" min="1" max="10"></div>
+        <div class="form-group"><label>Mô tả</label><textarea id="mon-mota" class="form-control" rows="3" placeholder="Mô tả môn học..."></textarea></div>
+        <div class="form-group"><label>Trạng thái</label>
+          <select id="mon-trangthai" class="form-control">
+            <option value="true">Hoạt động</option>
+            <option value="false">Không hoạt động</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-mon')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveMon()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Lịch học -->
+<div class="modal-overlay" id="modal-lh">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-lh-title">Thêm lịch học</span>
+      <button class="modal-close" onclick="closeModal('modal-lh')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="lh-id">
+      <div class="form-grid">
+        <div class="form-group"><label>Mã lớp học phần *</label><input type="text" id="lh-malophocphan" class="form-control" placeholder="VD: LHP001"></div>
+        <div class="form-group"><label>Ngày học *</label><input type="date" id="lh-ngayhoc" class="form-control"></div>
+        <div class="form-group"><label>Giờ bắt đầu *</label><input type="time" id="lh-giobatdau" class="form-control"></div>
+        <div class="form-group"><label>Giờ kết thúc *</label><input type="time" id="lh-gioketthu" class="form-control"></div>
+        <div class="form-group"><label>Mã phòng</label><input type="text" id="lh-maphong" class="form-control" placeholder="VD: A101"></div>
+        <div class="form-group"><label>Trạng thái</label>
+          <select id="lh-trangthai" class="form-control">
+            <option value="ChuaBatDau">Chưa bắt đầu</option>
+            <option value="DangDienRa">Đang diễn ra</option>
+            <option value="DaKetThuc">Đã kết thúc</option>
+            <option value="HuyBo">Hủy bỏ</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-lh')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveLH()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Lịch thi -->
+<div class="modal-overlay" id="modal-lt">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-lt-title">Thêm lịch thi</span>
+      <button class="modal-close" onclick="closeModal('modal-lt')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="lt-id">
+      <div class="form-grid">
+        <div class="form-group"><label>Mã lớp học phần *</label><input type="text" id="lt-malophocphan" class="form-control" placeholder="VD: LHP001"></div>
+        <div class="form-group"><label>Ngày thi *</label><input type="date" id="lt-ngaythi" class="form-control"></div>
+        <div class="form-group"><label>Giờ bắt đầu *</label><input type="time" id="lt-giobatdau" class="form-control"></div>
+        <div class="form-group"><label>Giờ kết thúc *</label><input type="time" id="lt-gioketthuc" class="form-control"></div>
+        <div class="form-group"><label>Mã phòng</label><input type="text" id="lt-maphong" class="form-control" placeholder="VD: A101"></div>
+        <div class="form-group"><label>Hình thức thi</label>
+          <select id="lt-hinhthucthi" class="form-control">
+            <option value="TuLuan">Tự luận</option>
+            <option value="TracNghiem">Trắc nghiệm</option>
+            <option value="ThucHanh">Thực hành</option>
+            <option value="VanDap">Vấn đáp</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Trạng thái</label>
+          <select id="lt-trangthai" class="form-control">
+            <option value="true">Hoạt động</option>
+            <option value="false">Hủy</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-lt')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveLT()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/common.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
